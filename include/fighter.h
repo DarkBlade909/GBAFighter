@@ -5,17 +5,20 @@
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_animate_actions.h"
 #include "bn_fixed_point.h"
+#include "bn_list.h"
 #include "bn_forward_list.h"
 #include "bn_vector.h"
 #include "bn_rect.h"
 #include "bn_unordered_map.h"
+#include "bn_span.h"
+#include "bn_array.h"
 #include "bn_affine_bg_ptr.h"
 #include "bn_affine_bg_item.h"
 
 #include "bn_sprite_items_ram_movement.h"
 #include "bn_sprite_items_ram_attacks.h"
 #include "bn_affine_bg_items_hitbox.h"
-// #include "bn_affine_bg_items_hurtbox.h"
+#include "bn_affine_bg_items_hurtbox.h"
 
 namespace db
 
@@ -28,12 +31,17 @@ namespace db
     //     int hurtboxAmt;
     // } boxData;
 
-    struct Hitbox {
+    struct Hitbox
+    {
         int offset_x;
         int offset_y;
         int width;
         int height;
-        bn::rect rect = bn::rect(offset_x, offset_y, width, height);
+
+        bn::rect rect() const
+        {
+            return bn::rect(offset_x, offset_y, width, height);
+        }
     };
 
     struct Move {
@@ -53,6 +61,10 @@ namespace db
 
         bn::sprite_animate_action<32> action_l;
         bn::sprite_animate_action<32> action_r;
+    };
+
+    struct Character {
+        bn::span<const Move> moveset;
     };
 
     class Fighter
@@ -126,12 +138,12 @@ namespace db
 
             // DEBUG
             bool _DEBUG = true;
-            bn::affine_bg_ptr _hurtbox_debug = bn::affine_bg_items::hitbox.create_bg(_position.x()+_hurtbox.offset_x, _position.y()+_hurtbox.offset_y);
+            bn::affine_bg_ptr _hurtbox_debug = bn::affine_bg_items::hurtbox.create_bg(_position.x()+_hurtbox.offset_x, _position.y()+_hurtbox.offset_y);
             bn::affine_bg_ptr _hitbox_debug = bn::affine_bg_items::hitbox.create_bg(_position);
 
             // Attacks
 
-            Move punch =
+            const Move punch =
             {
                 .damage = 5,
                 .guard = 1,
@@ -151,7 +163,7 @@ namespace db
                                                                   1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21),
             };
 
-            Move kick =
+            const Move kick =
             {
                 .damage = 5,
                 .guard = 1,
@@ -171,7 +183,7 @@ namespace db
                                                                   23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43),
             };
 
-            Move slash =
+            const Move slash =
             {
                 .damage = 5,
                 .guard = 1,
@@ -191,7 +203,7 @@ namespace db
                                                                   45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77, 79),
             };
 
-            Move heavy =
+            const Move heavy =
             {
                 .damage = 5,
                 .guard = 1,
@@ -209,6 +221,17 @@ namespace db
                                                                   80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116),
                 .action_r = bn::create_sprite_animate_action_once(_sprite_r, 2, bn::sprite_items::ram_attacks.tiles_item(),
                                                                   81, 83, 85, 87, 89, 91, 93, 95, 97, 99, 101, 103, 105, 107, 109, 111, 113, 115, 117),
+            };
+
+            const bn::array<Move, 4> ramlethal_moves = {
+                punch,
+                kick,
+                slash,
+                heavy
+            };
+
+            Character ramlethal = {
+                .moveset = ramlethal_moves
             };
 
         public:

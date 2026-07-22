@@ -65,5 +65,11 @@ vcpkg_installed/
 *.dwo
 
 # test output & cache
+/*.config
+/*.cxxflags
+/*.files
+/*.includes
 Testing/
 .cache/
+
+/*.cflags

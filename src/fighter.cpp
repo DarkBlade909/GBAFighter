@@ -505,7 +505,7 @@ namespace db
             target_multiplier = 1;
         }
         // Accelerate
-        if(!_crouching)
+        if(!_crouching && _grounded && !_attacking)
         {
             if(!_flip)
             {
@@ -518,13 +518,16 @@ namespace db
         }
 
         // Drag
-        if(_attacking)
+        if(_grounded)
         {
-            _velocity.set_x(_velocity.x()*_attacking_drag);
-        }
-        else
-        {
-            _velocity.set_x(_velocity.x()*_drag);
+            if(_attacking)
+            {
+                _velocity.set_x(_velocity.x()*_attacking_drag);
+            }
+            else
+            {
+                _velocity.set_x(_velocity.x()*_drag);
+            }
         }
 
         // Limit Speed
