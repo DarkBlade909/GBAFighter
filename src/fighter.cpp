@@ -449,10 +449,13 @@ namespace db
         }
 
         // Release dash
-        if(_lockout || (bn::keypad::right_released() && !_flip) || (bn::keypad::left_released() && _flip))
+        if(_dashing && _grounded)
         {
-            _velocity_multiplier = 1;
-            _dashing = false;
+            if(_lockout || (!bn::keypad::right_held() && !_flip) || (!bn::keypad::left_held() && _flip))
+            {
+                _velocity_multiplier = 1;
+                _dashing = false;
+            }
         }
 
         // Jump
@@ -518,14 +521,17 @@ namespace db
         }
 
         // Drag
-        if(_grounded)
+        if(_grounded || !_jumping)
         {
+            BN_LOG("grounded");
             if(_attacking)
             {
+                BN_LOG("Attack drag");
                 _velocity.set_x(_velocity.x()*_attacking_drag);
             }
             else
             {
+                BN_LOG("Drag");
                 _velocity.set_x(_velocity.x()*_drag);
             }
         }
