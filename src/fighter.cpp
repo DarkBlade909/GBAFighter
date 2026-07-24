@@ -48,20 +48,21 @@ namespace db
         set_motion(Motion::Idle);
 
         // // DEBUG
-        // _hurtbox_debug.put_above();
-        // BN_LOG("height: ", _hurtbox.height/32, "width: ", _hurtbox.width/32);
-        // _hurtbox_debug.set_scale((bn::fixed(_hurtbox.width)/256), (bn::fixed(_hurtbox.height)/256));
-        // _hurtbox_debug.set_blending_enabled(true);
-        // _hurtbox_debug.set_priority(2);
-        // _hurtbox_debug.set_wrapping_enabled(false);
-        // _hurtbox_debug.set_z_order(-2);
-        // _hitbox_debug.set_wrapping_enabled(false);
-        // _hitbox_debug.set_blending_enabled(true);
-        // _hitbox_debug.set_priority(3);
-        // _hitbox_debug.set_z_order(-4);
-        // _hitbox_debug.put_above();
-        // _hitbox_debug.set_visible(false);
-        // bn::blending::set_transparency_alpha(0.5);
+        if(_DEBUG)
+        {
+            _hurtbox_debug.put_above();
+            _hurtbox_debug.set_blending_enabled(true);
+            _hurtbox_debug.set_priority(2);
+            _hurtbox_debug.set_wrapping_enabled(false);
+            _hurtbox_debug.set_z_order(-2);
+            _hitbox_debug.put_above();
+            _hitbox_debug.set_blending_enabled(true);
+            _hitbox_debug.set_priority(2);
+            _hitbox_debug.set_wrapping_enabled(false);
+            _hitbox_debug.set_z_order(-2);
+            _hitbox_debug.set_visible(false);
+            bn::blending::set_transparency_alpha(0.5);
+        }
     }
 
     void Fighter::state_machine()
@@ -140,6 +141,10 @@ namespace db
 
             break;
         }
+
+        _hurtbox_debug.set_scale((bn::fixed(_character.moveset[int(_motion)].hurtbox.width)/256), (bn::fixed(_character.moveset[int(_motion)].hurtbox.height)/256));
+        _hurtbox_debug_offset.set_x(_character.moveset[int(_motion)].hurtbox.offset_x);
+        _hurtbox_debug_offset.set_y(_character.moveset[int(_motion)].hurtbox.offset_y);
     }
 
     void Fighter::animate()
@@ -171,23 +176,17 @@ namespace db
 
         // Anim States
         if(_attacking){
-            BN_LOG("ATTACK:", _action);
             if(_grounded)
             {
                 _jumping = false;
             }
             if(!animation::playing(_animation_l))
             {
-                BN_LOG("ATTACK FINISHED");
-                _attacking = false;
                 set_motion(Motion::Idle);
             }
         }
         else if(_jumping)
         {
-            if(_attacking && !_lockout) { _attacking = false; } // Cancel attack recovery
-
-            BN_LOG("Jumping");
             //Jump
             if(!_grounded && _motion != Motion::JumpStartup && _motion != Motion::JumpLoop)
             {
@@ -196,9 +195,6 @@ namespace db
         }
         else if(_dashing)
         {
-            if(_attacking && !_lockout) { _attacking = false; } // Cancel attack recovery
-
-            BN_LOG("Dashing");
             if(_motion != Motion::DashStartup && _motion != Motion::DashLoop)
             {
                 set_motion(Motion::DashStartup);
@@ -206,9 +202,7 @@ namespace db
         }
         else if(_backdashing)
         {
-            if(_attacking && !_lockout) { _attacking = false; } // Cancel attack recovery
 
-            BN_LOG("Backdashing");
             if(_motion != Motion::Backdash)
             {
                 set_motion(Motion::Backdash);
@@ -216,9 +210,7 @@ namespace db
         }
         else if(_crouching)
         {
-            if(_attacking && !_lockout) { _attacking = false; } // Cancel attack recovery
 
-            BN_LOG("Crouching");
             // Crouch Startup
             if(_motion != Motion::CrouchStartup && _motion != Motion::CrouchLoop && _motion != Motion::CrouchEnd)
             {
@@ -226,7 +218,6 @@ namespace db
             }
         }
         else if(_walking_r){
-            if(_attacking && !_lockout) { _attacking = false; } // Cancel attack recovery
 
             // Walk Startup
             if(_motion != Motion::WalkForwardStartup && _motion != Motion::WalkForward)
@@ -235,7 +226,6 @@ namespace db
             }
         }
         else if(_walking_l){
-            if(_attacking && !_lockout) { _attacking = false; } // Cancel attack recovery
             // Walk Startup
             if(_motion != Motion::WalkBackwardStartup && _motion != Motion::WalkBackward)
             {
@@ -243,10 +233,8 @@ namespace db
             }
         }
         else if(!_attacking) {
-            BN_LOG("Idling");
             if(_motion != Motion::Idle)
             {
-                BN_LOG("Idled.");
                 //idle
                 set_motion(Motion::Idle);
             }
@@ -445,6 +433,56 @@ namespace db
         _animation_r = animation::play(_sprite_r, data.animation_r);
     }
 
+    void Fighter::execute_attack()
+    {
+        // Not attacking
+        if(!_attacking)
+            return;
+
+        // Progress Frame
+        _current_frame++;
+
+        // Set move
+        _current_move = _character.moveset[int(_motion)];
+
+        // Startup Frames
+        if(_current_frame <= _current_move.startup)
+        {
+            BN_LOG("STARTUP");
+        }
+        // Active Frames
+        else if(_current_frame <= _current_move.startup+_current_move.active)
+        {
+            BN_LOG("ACTIVE");
+            if(_DEBUG)
+            {
+                _hitbox_debug.set_visible(true);
+            }
+        }
+        // Recovery Frames
+        else if(_current_frame <= _current_move.startup+_current_move.active+_current_move.recovery)
+        {
+            _lockout = true;
+            BN_LOG("RECOVERY");
+            if(_DEBUG)
+            {
+                _hitbox_debug.set_visible(false);
+            }
+        }
+        // Attack Finished
+        else
+        {
+            BN_LOG("FINISHED");
+            _lockout = false;
+            _attacking = false;
+            _current_frame = 0;
+        }
+
+        // Fighter::lockout(_current_move.recovery);
+
+
+    }
+
     void Fighter::move()
     {
         // Attack interrupt
@@ -537,6 +575,12 @@ namespace db
             _sprite_l.set_position(_position-bn::fixed_point(_flip_offset,0));
             _sprite_r.set_position(_position+bn::fixed_point(_flip_offset,0));
         }
+
+        if(_DEBUG)
+        {
+            _hurtbox_debug.set_position(_position.x() + _hurtbox_debug_offset.x(), _position.y() + _hurtbox_debug_offset.y());
+            _hitbox_debug.set_position(_position.x() + _hitbox_debug_offset.x(), _position.y() + _hitbox_debug_offset.y());
+        }
     }
 
     void Fighter::jump()
@@ -575,7 +619,22 @@ namespace db
         _attacking = true;
         set_motion(attackID);
         Fighter::lockout(_character.moveset[int(attackID)].recovery);
-        // _action = attackID;
+
+        if(_DEBUG)
+        {
+            _hitbox_debug.set_scale((bn::fixed(_character.moveset[int(attackID)].hitbox.width)/256), (bn::fixed(_character.moveset[int(attackID)].hitbox.height)/256));
+            _hitbox_debug_offset.set_x(_character.moveset[int(attackID)].hitbox.offset_x);
+            _hitbox_debug_offset.set_y(_character.moveset[int(attackID)].hitbox.offset_y);
+        }
+    }
+
+    void Fighter::update()
+    {
+        Fighter::check_inputs();
+        Fighter::state_machine();
+        Fighter::animate();
+        Fighter::move();
+        Fighter::execute_attack();
     }
 
 }

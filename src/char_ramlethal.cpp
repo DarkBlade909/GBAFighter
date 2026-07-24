@@ -353,85 +353,85 @@ namespace ramlethal
     // MOTIONS
 
     const MoveData idle = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = idle_l,
         .animation_r = idle_r
     };
 
     const MoveData walkForwardStartup = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = walk_f_startup_l,
         .animation_r = walk_f_startup_r,
     };
 
     const MoveData walkForward = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = walk_f_loop_l,
         .animation_r = walk_f_loop_r,
     };
 
     const MoveData walkBackwardStartup = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = walk_b_startup_l,
         .animation_r = walk_b_startup_r,
     };
 
     const MoveData walkBackward = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = walk_b_loop_l,
         .animation_r = walk_b_loop_r,
     };
 
     const MoveData dashStartup = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = dash_startup_l,
         .animation_r = dash_startup_r,
     };
 
     const MoveData dashLoop = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = dash_loop_l,
         .animation_r = dash_loop_r,
     };
 
     const MoveData backdash = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = backdash_l,
         .animation_r = backdash_r,
     };
 
     const MoveData crouchStartup = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = crouch_startup_l,
         .animation_r = crouch_startup_r,
     };
 
     const MoveData crouchLoop = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = crouch_loop_l,
         .animation_r = crouch_loop_r,
     };
 
     const MoveData crouchEnd = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = crouch_end_l,
         .animation_r = crouch_end_r,
     };
 
     const MoveData jumpStartup = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = jump_start_l,
         .animation_r = jump_start_r,
     };
 
     const MoveData jumpLoop = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = jump_loop_l,
         .animation_r = jump_loop_r,
     };
 
     const MoveData jumpEnd = {
-        .hurtbox = Hitbox(0,0,6,6),
+        .hurtbox = Hitbox(2,6,24,46),
         .animation_l = jump_end_l,
         .animation_r = jump_end_r,
     };
@@ -449,7 +449,7 @@ namespace ramlethal
             .dash_cancellable = false,
             .invulnerable = false,
             .hitbox = Hitbox(18, 0, 24, 16),
-            .hurtbox = Hitbox(0, 0, 1, 1),
+            .hurtbox = Hitbox(2,6,24,46),
 
             .animation_l = punch_l,
             .animation_r = punch_r,
@@ -460,14 +460,14 @@ namespace ramlethal
             .damage = 5,
             .guard = 1,
             .startup = 6,
-            .active = 4,
+            .active = 6,
             .recovery = 8,
             .blockstun = 5,
 
             .dash_cancellable = false,
             .invulnerable = false,
-            .hitbox = Hitbox(18, 0, 24, 16),
-            .hurtbox = Hitbox(0, 0, 1, 1),
+            .hitbox = Hitbox(18, 8, 28, 16),
+            .hurtbox = Hitbox(2,6,24,46),
 
             .animation_l = kick_l,
             .animation_r = kick_r,
@@ -485,7 +485,7 @@ namespace ramlethal
             .dash_cancellable = false,
             .invulnerable = false,
             .hitbox = Hitbox(18, 0, 24, 16),
-            .hurtbox = Hitbox(0, 0, 1, 1),
+            .hurtbox = Hitbox(2,6,24,46),
 
             .animation_l = slash_l,
             .animation_r = slash_r,
@@ -503,7 +503,7 @@ namespace ramlethal
             .dash_cancellable = false,
             .invulnerable = false,
             .hitbox = Hitbox(18, 0, 24, 16),
-            .hurtbox = Hitbox(0, 0, 1, 1),
+            .hurtbox = Hitbox(2,6,24,46),
 
             .animation_l = heavy_l,
             .animation_r = heavy_r,

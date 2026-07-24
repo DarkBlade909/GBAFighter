@@ -106,6 +106,8 @@ namespace db
 
         Motion _motion = Motion::Idle;
 
+        MoveData _current_move;
+
         int _motion_frame = 0;
         bool _motion_changed = false;
 
@@ -117,17 +119,19 @@ namespace db
         int _dash_timer = 0;
         int _velocity_multiplier = 1;
         int _flip_offset = 32;
+        int _current_frame = 0;
         int _elapsed_frames = 0;
         int _lockout_timer = 0;
         int _lockout_duration = 0;
-        int _attack_timer = 0;
         bool _lockout = false;
 
 
         // DEBUG
         bool _DEBUG = true;
-        // bn::affine_bg_ptr _hurtbox_debug = bn::affine_bg_items::hurtbox.create_bg(_position.x()+_hurtbox.offset_x, _position.y()+_hurtbox.offset_y);
-        // bn::affine_bg_ptr _hitbox_debug = bn::affine_bg_items::hitbox.create_bg(_position);
+        bn::point _hurtbox_debug_offset = bn::point(0,0);
+        bn::point _hitbox_debug_offset = bn::point(0,0);
+        bn::affine_bg_ptr _hurtbox_debug = bn::affine_bg_items::hurtbox.create_bg(_position);
+        bn::affine_bg_ptr _hitbox_debug = bn::affine_bg_items::hitbox.create_bg(_position);
 
         public:
             Fighter(const CharacterData& character, bn::fixed_point spawn_position);
@@ -144,6 +148,9 @@ namespace db
             void lockout(int frames);
             void state_machine();
             void set_motion(Motion motion);
+            void execute_attack();
+
+            void update();
     };
 }
 
