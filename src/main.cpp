@@ -120,12 +120,12 @@ namespace games
     void fighter_scene()
     {
         // Variables
-        db::Fighter fighter = db::Fighter(ramlethal::character, bn::fixed_point(32, 25));
-        // BN_LOG("Motionset Size: ", ramlethal::character.motionset.size());
+        db::Fighter fighter = db::Fighter(ramlethal::character, bn::fixed_point(-32, 25));
+
         // db::Fighter enemy = db::Fighter(ramlethal::character, bn::fixed_point(32, 25));
         // enemy.flip();
 
-        // bn::regular_bg_ptr simple_bg = bn::regular_bg_items::simple_bg.create_bg(0, 0);
+        bn::regular_bg_ptr simple_bg = bn::regular_bg_items::simple_bg.create_bg(0, 0);
         fighter.animate();
 
         while(! bn::keypad::start_pressed())

@@ -6,8 +6,6 @@
 
 #include "bn_sprite_items_ram_movement.h"
 #include "bn_sprite_items_ram_attacks.h"
-#include "bn_assert.h"
-#include "bn_log.h"
 
 namespace ramlethal
 {
@@ -512,8 +510,9 @@ namespace ramlethal
         };
 
     // CHARACTER DATA
-    const MoveData _motionset[] =
+    const MoveData _moveset[] =
     {
+        // Movement
         idle,
         walkForwardStartup,
         walkForward,
@@ -529,14 +528,7 @@ namespace ramlethal
         jumpLoop,
         jumpEnd,
 
-        punch,
-        kick,
-        slash,
-        heavy
-    };
-
-    const MoveData _moveset[] =
-    {
+        // Attacks
         punch,
         kick,
         slash,
@@ -548,8 +540,7 @@ namespace ramlethal
             .max_hp = 100,
             .movement_sprite = &bn::sprite_items::ram_movement,
             .attack_sprite = &bn::sprite_items::ram_attacks,
-            .motionset = _motionset,
-            .moveset = _moveset,
+            .moveset = _moveset
 
         };
 }

@@ -40,10 +40,10 @@ namespace db
 
         _animation_l = animation::play(
             _sprite_l,
-            _character.motionset[0].animation_l);
+            _character.moveset[0].animation_l);
         _animation_r = animation::play(
             _sprite_r,
-            _character.motionset[0].animation_r);
+            _character.moveset[0].animation_r);
 
         set_motion(Motion::Idle);
 
@@ -439,7 +439,7 @@ namespace db
         _motion_frame = 0;
 
         const MoveData& data =
-            _character.motionset[int(motion)];
+            _character.moveset[int(motion)];
 
         _animation_l = animation::play(_sprite_l, data.animation_l);
         _animation_r = animation::play(_sprite_r, data.animation_r);
@@ -574,7 +574,7 @@ namespace db
     {
         _attacking = true;
         set_motion(attackID);
-        Fighter::lockout(_character.motionset[int(attackID)].recovery);
+        Fighter::lockout(_character.moveset[int(attackID)].recovery);
         // _action = attackID;
     }
 
