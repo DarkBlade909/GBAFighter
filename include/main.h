@@ -4,7 +4,7 @@
 namespace db
 
 {
-    class Player
+    class M
     {
         private:
 
